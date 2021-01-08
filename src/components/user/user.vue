@@ -26,7 +26,7 @@
         <el-table-column label="#" type="index"></el-table-column>
         <el-table-column label="姓名" prop="username"></el-table-column>
         <el-table-column label="邮箱" prop="email"></el-table-column>
-        <el-table-column label="电话" prop="mobile"></el-table-column>
+        <el-table-column label="电话" prop="phone"></el-table-column>
         <el-table-column label="角色" prop="role_name"></el-table-column>
         <el-table-column label="状态" prop="mg_state">
           <!--作用域插槽  -->
@@ -244,7 +244,7 @@ export default {
       const { data: res } = await this.$http.get('users', {
         params: this.queryInfo,
       })
-      if (res.meta.status !== 200) return this.$message.error('获取列表失败')
+      if (res.status !== 200) return this.$message.error('获取列表失败')
       // 保存total总页数，users用户列表
       this.users = res.data.users
       this.total = res.data.total
@@ -390,5 +390,5 @@ export default {
 }
 </script>
 
-<style >
+<style>
 </style>

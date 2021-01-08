@@ -24,15 +24,15 @@
             <el-row
               :class="['bdbottom',index === 0 ? 'bdtop' : '', 'vcenter']"
               v-for="(item, index) in scope.row.children"
-              :key="item.id"
+              :key="item.ps_id"
             >
               <!-- 渲染一级权限 -->
               <el-col :span="5">
                 <el-tag
                   type="danger"
                   closable
-                  @close="removeRightById(scope.row, item.id)"
-                >{{item.authName}}</el-tag>
+                  @close="removeRightById(scope.row, item.ps_id)"
+                >{{item.ps_name}}</el-tag>
                 <i class="el-icon-caret-right"></i>
               </el-col>
               <!-- 渲染二、三级权限 -->
@@ -40,15 +40,15 @@
                 <el-row
                   :class="[index1 === 0 ? '' : 'bdtop', 'vcenter']"
                   v-for="(item1, index1) in item.children"
-                  :key="item1.id"
+                  :key="item1.ps_id"
                 >
                   <!-- 二级权限 -->
                   <el-col :span="6">
                     <el-tag
                       type="success"
                       closable
-                      @close="removeRightById(scope.row, item1.id)"
-                    >{{item1.authName}}</el-tag>
+                      @close="removeRightById(scope.row, item1.ps_id)"
+                    >{{item1.ps_name}}</el-tag>
                     <i class="el-icon-caret-right"></i>
                   </el-col>
                   <!-- 三级权限 -->
@@ -56,10 +56,10 @@
                     <el-tag
                       type="warning"
                       v-for="item2 in item1.children"
-                      :key="item2.id"
+                      :key="item2.ps_id"
                       closable
-                      @close="removeRightById(scope.row, item2.id)"
-                    >{{item2.authName}}</el-tag>
+                      @close="removeRightById(scope.row, item2.ps_id)"
+                    >{{item2.ps_name}}</el-tag>
                   </el-col>
                 </el-row>
               </el-col>
@@ -68,21 +68,21 @@
         </el-table-column>
         <!--索引列  -->
         <el-table-column label="#" type="index"></el-table-column>
-        <el-table-column label="角色名称" prop="roleName"></el-table-column>
-        <el-table-column label="角色描述" prop="roleDesc"></el-table-column>
+        <el-table-column label="角色名称" prop="role_name"></el-table-column>
+        <el-table-column label="角色描述" prop="role_Desc"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button
               type="primary"
               icon="el-icon-edit"
               size="mini"
-              @click="showEditDialog(scope.row.id)"
+              @click="showEditDialog(scope.row.role_id)"
             >编辑</el-button>
             <el-button
               type="danger"
               icon="el-icon-delete"
               size="mini"
-              @click="removeRoleById(scope.row.id)"
+              @click="removeRoleById(scope.row.role_id)"
             >删除</el-button>
             <el-button
               type="warning"
@@ -99,11 +99,11 @@
     <el-dialog title="修改信息" :visible.sync="editDialogVisible" width="50%" @close="editDialogClosed">
       <!-- 内容主体部分 -->
       <el-form :model="editForm" :rules="editFormRules" ref="editFormRef" label-width="100px">
-        <el-form-item label="角色名称" prop="roleName">
-          <el-input v-model="editForm.roleName"></el-input>
+        <el-form-item label="角色名称" prop="role_name">
+          <el-input v-model="editForm.role_name"></el-input>
         </el-form-item>
-        <el-form-item label="角色描述" prop="roleDesc">
-          <el-input v-model="editForm.roleDesc"></el-input>
+        <el-form-item label="角色描述" prop="role_Desc">
+          <el-input v-model="editForm.role_Desc"></el-input>
         </el-form-item>
       </el-form>
       <!-- 底部区域 -->
@@ -116,11 +116,11 @@
     <el-dialog title="添加角色信息" :visible.sync="addDialogVisible" width="50%" @close="addDialogClosed">
       <!-- 内容主体部分 -->
       <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="100px">
-        <el-form-item label="角色名称" prop="roleName">
-          <el-input v-model="addForm.roleName"></el-input>
+        <el-form-item label="角色名称" prop="role_name">
+          <el-input v-model="addForm.role_name"></el-input>
         </el-form-item>
-        <el-form-item label="角色描述" prop="roleDesc">
-          <el-input v-model="addForm.roleDesc"></el-input>
+        <el-form-item label="角色描述" prop="role_Desc">
+          <el-input v-model="addForm.role_Desc"></el-input>
         </el-form-item>
       </el-form>
       <!-- 底部区域 -->
@@ -149,7 +149,7 @@
       <!-- 底部区域 -->
       <span slot="footer">
         <el-button @click="SetDialogVisible">取 消</el-button>
-        <el-button type="primary" @click="allRights" >确 定</el-button>
+        <el-button type="primary" @click="allRights">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -170,12 +170,8 @@ export default {
       editForm: {},
       // 编辑表单规则
       editFormRules: {
-        roleName: [
-          { required: true, message: '角色名不能为空', tigger: 'blur' },
-        ],
-        roleDesc: [
-          { required: true, message: '角色描述不能为空', tigger: 'blur' },
-        ],
+        role_name: [{ required: true, message: '角色名不能为空', tigger: 'blur' }],
+        role_Desc: [{ required: true, message: '角色描述不能为空', tigger: 'blur' }],
       },
       // 显示添加对话框是否显示
       addDialogVisible: false,
@@ -186,12 +182,8 @@ export default {
       },
       // 编辑表单规则
       addFormRules: {
-        roleName: [
-          { required: true, message: '角色名不能为空', tigger: 'blur' },
-        ],
-        roleDesc: [
-          { required: true, message: '角色描述不能为空', tigger: 'blur' },
-        ],
+        role_name: [{ required: true, message: '角色名不能为空', tigger: 'blur' }],
+        role_Desc: [{ required: true, message: '角色描述不能为空', tigger: 'blur' }],
       },
       // 分配角色对话框是否显示
       SetDialogVisible: false,
@@ -213,7 +205,7 @@ export default {
     async getRolesList() {
       const { data: res } = await this.$http.get('roles')
 
-      if (res.meta.status !== 200) {
+      if (res.status !== 200) {
         return this.$message.error('获取角色列表失败')
       }
 
@@ -225,11 +217,11 @@ export default {
     async showEditDialog(id) {
       const { data: res } = await this.$http.get(`roles/${id}`)
 
-      if (res.meta.status !== 200) {
-        return this.$message.error('获取角色列表失败')
+      if (res.status !== 200) {
+        return this.$message.error('获取指定的角色列表失败')
       }
 
-      this.editForm = res.data
+      this.editForm = res.data[0]
       console.log(this.editForm)
       this.editDialogVisible = !this.editDialogVisible
     },
@@ -241,15 +233,11 @@ export default {
     editRole() {
       this.$refs.editFormRef.validate(async (valid) => {
         if (!valid) return this.$message.error('请输入正确的信息')
-
         // 发起修改角色信息的请求
-        const { data: res } = await this.$http.put(
-          `roles/${this.editForm.roleId}`,
-          {
-            roleName: this.editForm.roleName,
-            roleDesc: this.editForm.roleDesc,
-          }
-        )
+        const { data: res } = await this.$http.post(`roles/${this.editForm.role_id}`, {
+          role_name: this.editForm.role_name,
+          role_Desc: this.editForm.role_Desc,
+        })
         console.log(res)
         // 重新获取所有角色列表
         this.getRolesList()
@@ -258,16 +246,13 @@ export default {
     },
     // 根据ID删除对应的角色
     async removeRoleById(id) {
+      console.log(id)
       // 弹框询问是否删除该角色信息
-      const confirmResult = await this.$confirm(
-        '此操作将永久删除该角色, 是否继续?',
-        '提示',
-        {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-        }
-      ).catch((error) => console.log(error))
+      const confirmResult = await this.$confirm('此操作将永久删除该角色, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }).catch((error) => console.log(error))
 
       if (confirmResult !== 'confirm') {
         return this.$message.error('已经取消删除')
@@ -275,7 +260,7 @@ export default {
 
       const { data: res } = await this.$http.delete(`roles/${id}`)
       console.log(res)
-      if (res.meta.status !== 200) return this.$message.error('角色删除失败')
+      if (res.status !== 200) return this.$message.error('角色删除失败')
 
       this.$message.success('角色删除成功')
       this.getRolesList()
@@ -291,8 +276,8 @@ export default {
 
         // 发送请求添加角色信息请求
         const { data: res } = await this.$http.post('roles', {
-          roleName: this.addForm.roleName,
-          roleDesc: this.addForm.roleDesc,
+          role_name: this.addForm.role_name,
+          role_Desc: this.addForm.role_Desc,
         })
         console.log(res)
 
@@ -304,22 +289,16 @@ export default {
     // 点击关闭按钮，删除对应角色的权限
     async removeRightById(role, rightId) {
       // 弹框询问是否删除该权限
-      const confirmResult = await this.$confirm(
-        '此操作将永久删除该权限, 是否继续?',
-        '提示',
-        {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-        }
-      ).catch((error) => console.log(error))
+      const confirmResult = await this.$confirm('此操作将永久删除该权限, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }).catch((error) => console.log(error))
 
       if (confirmResult !== 'confirm') {
         return this.$message.info('已经取消删除')
       }
-      const { data: res } = await this.$http.delete(
-        `roles/${role.id}/rights/${rightId}`
-      )
+      const { data: res } = await this.$http.delete(`roles/${role.role_id}/rights/${rightId}`)
 
       if (res.meta.status !== 200) {
         return this.$message.error('删除该权限失败')
@@ -358,17 +337,11 @@ export default {
       this.defaulKeys = []
     },
     async allRights() {
-      const keys = [
-        ...this.$refs.treeRef.getCheckedKeys(),
-        ...this.$refs.treeRef.getHalfCheckedKeys(),
-      ]
+      const keys = [...this.$refs.treeRef.getCheckedKeys(), ...this.$refs.treeRef.getHalfCheckedKeys()]
 
       const idStr = keys.join(',')
 
-      const { data: res } = await this.$http.post(
-        `roles/${this.roleId}/rights`,
-        { rids: idStr }
-      )
+      const { data: res } = await this.$http.post(`roles/${this.roleId}/rights`, { rids: idStr })
       if (res.meta.status !== 200) {
         return this.$message.error('更新权限失败')
       }

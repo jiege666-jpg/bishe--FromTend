@@ -40,3 +40,7 @@ body,
 .ql-editor{
     min-height: 300px;
 }
+.el-switch__label {
+    font-size: 16px;
+    font-weight: 600;
+}
